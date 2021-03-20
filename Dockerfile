@@ -21,6 +21,7 @@ RUN apt-get install -y nginx
 RUN mkdir -p ./src
 COPY src ./src
 COPY uwsgi ./uwsgi
+RUN rm /etc/nginx/sites-enabled/default
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY app.py ./
 COPY startup.sh ./
