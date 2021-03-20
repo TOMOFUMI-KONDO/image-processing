@@ -27,10 +27,11 @@ def process_image() -> object:
     try:
         img = request.files['image'].read()
         img_base64_bytes = base64.b64encode(img)
+        rects = request.form.to_dict()['rects']
 
         converted_imgs_base64_bytes = [img_base64_bytes]
         # note(kondo): 画像処理が途中でこけるので、一旦実行しないようにしている
-        # converted_imgs_base64_bytes = main(img_base64_bytes)
+        # converted_imgs_base64_bytes = main(img_base64_bytes, rects)
         converted_imgs_base64_str = [
             converted_img_base64_bytes.decode('utf-8')
             for converted_img_base64_bytes in converted_imgs_base64_bytes
