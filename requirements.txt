@@ -1,0 +1,5 @@
+Flask==1.1.2
+Flask-Cors==3.0.10
+uWSGI==2.0.19.1
+boto3==1.17.33
+Pillow==8.1.2
