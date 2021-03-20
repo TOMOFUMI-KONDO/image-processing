@@ -83,12 +83,12 @@ def encode_img(img_png):
     return encoded
 
 
-def main(img_base64=None):
+def main(img_base64, rects):
     """Implement image processing
 
     Args:
         image_binary: binary encoded png image.
-        guide: shows where are each person.
+        rects: shows where are each person.
     Returns:
         processed image (number is human number)
     """
@@ -103,7 +103,7 @@ def main(img_base64=None):
     img_original_bgr = cv2.cvtColor(img_original, cv2.COLOR_RGBA2BGR)
 
     # crop image with guide
-    imgs_cropped = crop_image(img_original_bgr)
+    imgs_cropped = crop_image(img_original_bgr, rects)
 
     # -------1. (debug)----------
 
