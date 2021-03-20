@@ -9,8 +9,9 @@ services:
       - 80:80
     environment:
       APP_ENV: development
+      S3_BUCKET: image-processing-181562662531
     volumes:
-      - ./src:/var/app/src
+        - ./src:/var/app/src
 
 volumes:
-  src: { }
+  src: {}

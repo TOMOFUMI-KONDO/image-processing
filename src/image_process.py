@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import base64
 
-from segmentation import DeepLabModel
+from src.segmentation import DeepLabModel
 
 
 def edit_gamma_contrast(in_img):

@@ -1,14 +1,18 @@
 import base64
 import os
 from datetime import datetime
+from typing import List
 
 import boto3
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-app = Flask('image-processing')
+from src.image_process import main
 
-if os.environ.get('APP_ENV', '') == 'development':
+app = Flask('image-processing')
+app_env = os.environ.get('APP_ENV', '')
+
+if app_env == 'development':
     app.config['DEBUG'] = True
 
 
@@ -21,25 +25,23 @@ def health() -> str:
 @app.route('/image', methods=['POST'])
 def process_image() -> object:
     try:
-        s3 = boto3.resource('s3')
-        bucket = s3.Bucket('image-processing-181562662531')
-
         img = request.files['image'].read()
-        img_base64 = base64.b64encode(img).decode('utf-8')
-        img_file = base64.b64decode(img_base64.encode('UTF-8'))
+        img_base64_bytes = base64.b64encode(img)
 
-        time_str = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-        key = time_str + '.png'
+        converted_imgs_base64_bytes = [img_base64_bytes]
+        # converted_imgs_base64_bytes = main(img_base64_bytes)
+        converted_imgs_base64_str = [
+            converted_img_base64_bytes.decode('utf-8')
+            for converted_img_base64_bytes in converted_imgs_base64_bytes
+        ]
 
-        bucket.put_object(
-            Body=img_file,
-            Key=key
-        )
+        if app_env == 'production':
+            put_s3(converted_imgs_base64_bytes)
 
         return jsonify({
             'status': 'success',
             'result': {
-                'image': img_base64
+                'image': converted_imgs_base64_str
             }
         })
     except Exception as e:
@@ -49,6 +51,23 @@ def process_image() -> object:
             'status': 'failure',
             'message': str(e)
         })
+
+
+def put_s3(imgs_base64: List[bytes], extension='png'):
+    imgs = [base64.b64decode(img_base64) for img_base64 in imgs_base64]
+
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket(os.environ.get('S3_BUCKET', ''))
+
+    time_str = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+
+    for index, img in enumerate(imgs):
+        key = f'{time_str}-{index}.{extension}'
+
+        bucket.put_object(
+            Body=img,
+            Key=key
+        )
 
 
 CORS(app)
