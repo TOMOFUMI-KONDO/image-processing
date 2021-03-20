@@ -29,6 +29,7 @@ def process_image() -> object:
         img_base64_bytes = base64.b64encode(img)
 
         converted_imgs_base64_bytes = [img_base64_bytes]
+        # note(kondo): 画像処理が途中でこけるので、一旦実行しないようにしている
         # converted_imgs_base64_bytes = main(img_base64_bytes)
         converted_imgs_base64_str = [
             converted_img_base64_bytes.decode('utf-8')
