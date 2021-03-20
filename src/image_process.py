@@ -37,22 +37,30 @@ def edit_gamma_contrast(in_img):
     return img_gamma
 
 
-def crop_image(images, guide):
+def crop_image(image, rects):
     """Crop (trim) images with guide from frontend
 
     Args:
-        images:
+        image: input image [BGR]
+        rects: guide of where are persons
     Returns:
-        List of cropped images(same sized)
+        List of cropped images [BGR](same sized)
     """
-    # TODO: 実装！！
+    imgs_cropped = []
+    for rect in rects:
+        crop_img = image[
+            rect["y"] : rect["y"] + rect["h"], rect["x"] : rect["x"] + rect["w"]
+        ]
+        imgs_cropped.append(crop_img)
+
+    return imgs_cropped
 
 
 def decode_img(img_base64):
-    """decode from base64 string into png
+    """decode from base64 into png
 
     Args:
-        img_base64: base64 string
+        img_base64: base64
     Returns:
         a png image
     """
@@ -63,12 +71,12 @@ def decode_img(img_base64):
 
 
 def encode_img(img_png):
-    """encode from a png image into base64 string
+    """encode from a png image into base64
 
     Args:
         img_png: single png[RGBA] image
     Returns:
-        encoded base64 string
+        encoded base64
     """
     retval, png = cv2.imencode(".png", img_png)
     encoded = base64.b64encode(png.tostring())
@@ -87,7 +95,7 @@ def main(img_base64=None):
 
     # ------1. (honban)---------
 
-    # decode from base64 string into png
+    # decode from base64 into png
     # TODO:
     img_original = decode_img(img_base64)
 
