@@ -9,9 +9,10 @@ RUN pip install --upgrade pip && \
     opencv-contrib-python && \
     apt-get update && apt-get install -y libgl1-mesa-dev
 
-RUN mkdir model && \
-    apt-get install -y curl && \
-    curl -OL http://download.tensorflow.org/models/deeplabv3_pascal_train_aug_2018_01_04.tar.gz --output "model/deeplabv3_pascal_train_aug_2018_01_04.tar.gz"
+RUN apt-get install -y curl && \
+    mkdir model && \
+    cd model && \
+    curl -OL http://download.tensorflow.org/models/deeplabv3_pascal_train_aug_2018_01_04.tar.gz
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir
