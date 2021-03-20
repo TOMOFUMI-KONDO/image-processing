@@ -49,7 +49,8 @@ def crop_image(image, rects):
     imgs_cropped = []
     for rect in rects:
         crop_img = image[
-            rect["y"] : rect["y"] + rect["h"], rect["x"] : rect["x"] + rect["w"]
+            int(rect["y"]) : int(rect["y"]) + int(rect["h"]),
+            int(rect["x"]) : int(rect["x"]) + int(rect["w"]),
         ]
         imgs_cropped.append(crop_img)
 
