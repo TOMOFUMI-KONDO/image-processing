@@ -79,7 +79,8 @@ def encode_img(img_png):
     Returns:
         encoded base64
     """
-    retval, png = cv2.imencode(".png", img_png)
+    img_png_rbga = cv2.cvtColor(img_png, cv2.COLOR_RGBA2BGRA)
+    retval, png = cv2.imencode(".png", img_png_rbga)
     encoded = base64.b64encode(png.tostring())
     return encoded
 
