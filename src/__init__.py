@@ -30,7 +30,10 @@ def process_image() -> object:
     try:
         img = request.files['image'].read()
         img_base64_bytes = base64.b64encode(img)
-        rects = json.loads(request.form.to_dict()['rects'])
+
+        request_form = request.form
+        print(request_form)
+        rects = json.loads(request_form.to_dict()['rects'])
 
         # converted_imgs_base64_bytes = [img_base64_bytes]
         # note(kondo): 画像処理が途中でこけるので、一旦実行しないようにしている
