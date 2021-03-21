@@ -43,7 +43,7 @@ class DeepLabModel:
             raise RuntimeError("Cannot find inference graph in tar archive")
 
         with self.graph.as_default():
-            tf.import_graph_def(graph_def, name="")
+            tf.import_graph_def(graph_def, name="dummyname")
 
         self.sess = tf.compat.v1.Session(graph=self.graph)
 
