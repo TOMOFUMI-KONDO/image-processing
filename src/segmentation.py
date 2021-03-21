@@ -36,8 +36,17 @@ class DeepLabModel:
 
         graph_def = None
 
-        pb_path = "model/frozen_inference_graph.pb"
-        graph_def = tf.compat.v1.GraphDef.FromString(open(pb_path, "rb").read())
+        self.MODEL_PATH = "model/deeplabv3_pascal_train_aug_2018_01_04.tar.gz"
+
+        # Extract frozen graph from tar archive.
+        tar_file = tarfile.open(self.MODEL_PATH)
+        for tar_info in tar_file.getmembers():
+            if self.FROZEN_GRAPH_NAME in os.path.basename(tar_info.name):
+                file_handle = tar_file.extractfile(tar_info)
+                graph_def = tf.GraphDef.FromString(file_handle.read())
+                break
+
+        tar_file.close()
 
         if graph_def is None:
             raise RuntimeError("Cannot find inference graph in tar archive")

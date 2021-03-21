@@ -12,10 +12,7 @@ RUN pip install --upgrade pip && \
 RUN apt-get install -y curl && \
     mkdir model && \
     cd model && \
-    curl -OL http://download.tensorflow.org/models/deeplabv3_pascal_train_aug_2018_01_04.tar.gz && \
-    tar -zxvf deeplabv3_pascal_train_aug_2018_01_04.tar.gz && \
-    cp deeplabv3_pascal_train_aug_2018_01_04/deeplabv3_pascal_train_aug/frozen_inference_graph.pb ./ &&  \
-    rm -R deeplabv3_pascal_train_aug_2018_01_04
+    curl -OL http://download.tensorflow.org/models/deeplabv3_pascal_train_aug_2018_01_04.tar.gz
 
 
 COPY requirements.txt .
