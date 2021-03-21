@@ -11,6 +11,8 @@ from flask_cors import CORS
 from src.image_process import main
 
 app = Flask('image-processing')
+CORS(app)
+
 app_env = os.environ.get('APP_ENV', '')
 
 if app_env == 'development':
@@ -71,6 +73,3 @@ def put_s3(imgs_base64: List[bytes], extension='png'):
             Body=img,
             Key=key
         )
-
-
-CORS(app)
