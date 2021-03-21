@@ -32,7 +32,7 @@ def edit_gamma_contrast(in_img):
     # ガンマ補正
     img_gamma = cv2.LUT(in_img, g_table)
     # コントラスト補正
-    img_gamma = cv2.LUT(img_gamma, c_table)
+    # img_gamma = cv2.LUT(img_gamma, c_table)
 
     return img_gamma
 
