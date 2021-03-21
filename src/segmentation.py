@@ -11,26 +11,33 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-# tensorflowのwarningを消す
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
-
 
 class DeepLabModel:
     """Class of deeplearning model for segmentation."""
 
-    INPUT_TENSOR_NAME = "ImageTensor:0"
-    OUTPUT_TENSOR_NAME = "SemanticPredictions:0"
+    INPUT_TENSOR_NAME = "dummyname/ImageTensor:0"
+    OUTPUT_TENSOR_NAME = "dummyname/SemanticPredictions:0"
     INPUT_SIZE = 256
     FROZEN_GRAPH_NAME = "frozen_inference_graph"
 
     # OPTIMIZE: tarファイルの中身もとから出しておけるならそうする
     def __init__(self):
         """Creates and loads pretrained deeplab model"""
+
+        # tensorflowのwarningを消す
+        os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+
+        # GPU 対応
+        config = tf.ConfigProto()
+        config.gpu_options.allow_growth = True
+        tf.keras.backend.set_session(tf.Session(config=config))
+
         self.graph = tf.Graph()
+
+        graph_def = None
 
         self.MODEL_PATH = "model/deeplabv3_pascal_train_aug_2018_01_04.tar.gz"
 
-        graph_def = None
         # Extract frozen graph from tar archive.
         tar_file = tarfile.open(self.MODEL_PATH)
         for tar_info in tar_file.getmembers():
@@ -45,9 +52,9 @@ class DeepLabModel:
             raise RuntimeError("Cannot find inference graph in tar archive")
 
         with self.graph.as_default():
-            tf.import_graph_def(graph_def, name="")
+            tf.import_graph_def(graph_def, name="dummyname")
 
-        self.sess = tf.Session(graph=self.graph)
+        self.sess = tf.compat.v1.Session(graph=self.graph)
 
     def run(self, images):
         """Runs inference on a batch of images.
@@ -77,8 +84,6 @@ class DeepLabModel:
             return_li.append((resized_image, seg_map))
         print("Segmentation Finish!!")
 
-        # return return_li
-
         img_li = []
         for i, (img, seg_map) in enumerate(return_li):
             img_rgba = cv2.cvtColor(img, cv2.COLOR_RGB2BGRA)
@@ -103,6 +108,7 @@ class DeepLabModel:
 
 
 def main():
+
     MODEL = DeepLabModel()
     print("Model loaded successfully!")
 
