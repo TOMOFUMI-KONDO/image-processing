@@ -1,5 +1,5 @@
 """
-一連の処理をまとめた、デプロイ用のファイル
+画像処理を行うスクリプト
 """
 
 import cv2
@@ -10,7 +10,7 @@ from src.segmentation import DeepLabModel
 
 
 def edit_gamma_contrast(in_img):
-    """Edit gamma and contrast for good looks.
+    """Edit gamma for good looks.
 
     Args:
         in_img: input image. [color-order: 'BGR']
@@ -23,25 +23,18 @@ def edit_gamma_contrast(in_img):
     g_table = np.array(
         [((i / 255.0) ** (1 / gamma)) * 255 for i in np.arange(0, 256)]
     ).astype("uint8")
-    # コントラスト補正用テーブル
-    a = 10  # PARAMETER
-    c_table = np.array(
-        [255.0 / (1 + np.exp(-a * (i - 128) / 255)) for i in np.arange(0, 256)]
-    ).astype("uint8")
 
     # ガンマ補正
     img_gamma = cv2.LUT(in_img, g_table)
-    # コントラスト補正
-    # img_gamma = cv2.LUT(img_gamma, c_table)
 
     return img_gamma
 
 
 def crop_image(image, rects):
-    """Crop (trim) images with guide from frontend
+    """Crop images with guide from frontend
 
     Args:
-        image: input image [BGR]
+        image: an input image [BGR]
         rects: guide of where are persons
     Returns:
         List of cropped images [BGR](same sized)
@@ -86,7 +79,7 @@ def encode_img(img_png):
 
 
 def main(img_base64, rects):
-    """Implement image processing
+    """Entroy point. Implement image processing.
 
     Args:
         image_binary: binary encoded png image.
@@ -95,10 +88,9 @@ def main(img_base64, rects):
         processed image (number is human number)
     """
 
-    # ------1. (honban)---------
+    # ------1.---------
 
     # decode from base64 into png
-    # TODO:
     img_original = decode_img(img_base64)
 
     # from png to BGR
@@ -106,14 +98,6 @@ def main(img_base64, rects):
 
     # crop image with guide
     imgs_cropped = crop_image(img_original_bgr, rects)
-
-    # -------1. (debug)----------
-
-    # imgs_cropped = []
-    # for i in range(10):
-    #     img_read = cv2.imread(f"img/crop{i+1}.png")
-    #     assert img_read is not None
-    #     imgs_cropped.append(img_read)
 
     # -------2.-------
 
@@ -127,21 +111,10 @@ def main(img_base64, rects):
     seg_model = DeepLabModel()
     imgs_seged = seg_model.run(imgs_editted_rgb)
 
-    # -------3. (honban)---------
+    # -------3.---------
 
     # encode from png to binary
     imgs_encoded = [encode_img(image) for image in imgs_seged]
 
     # return binary png image
     return imgs_encoded
-
-    # -------3. (debug)---------
-
-    # save image
-    # for i, image in enumerate(imgs_seged):
-    #     # print(image.shape)
-    #     cv2.imwrite(f"res_img/256-all/{i+1}.png", image)
-
-
-if __name__ == "__main__":
-    main()

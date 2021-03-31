@@ -1,10 +1,3 @@
-"""
-https://colab.research.google.com/github/tensorflow/models/blob/master/research/deeplab/deeplab_demo.ipynb#scrollTo=Y7iErVUps7mh
-のデモを参考に、セグメンテーションする
-
-生成されたマスク画像をモルフォロジー変換してきれいに
-"""
-
 import os
 import tarfile
 import cv2
@@ -70,6 +63,7 @@ class DeepLabModel:
         resize_ratio = 1.0 * self.INPUT_SIZE / max(width, height)
         target_size = (int(resize_ratio * width), int(resize_ratio * height))
 
+        # 深層学習モデルを使用してセグメンテーションの処理を実行
         print("Segmentation Start!!")
         return_li = []
         for image in images:
@@ -84,6 +78,7 @@ class DeepLabModel:
             return_li.append((resized_image, seg_map))
         print("Segmentation Finish!!")
 
+        # 各画像について、seg_mapをもとに人以外の領域を透過させる
         img_li = []
         for i, (img, seg_map) in enumerate(return_li):
             img_rgba = cv2.cvtColor(img, cv2.COLOR_RGB2BGRA)
@@ -103,7 +98,6 @@ class DeepLabModel:
                 img_rgba[:, :, 3] = 255
                 img_li.append(img_rgba)
 
-            # cv2.imwrite(f"res_img/256-{i}.png", img_rgba)
         return img_li
 
 
@@ -125,11 +119,6 @@ def main():
 
     for i, (img, seg_map) in enumerate(img_seg_li):
         img_rgba = cv2.cvtColor(img, cv2.COLOR_RGB2BGRA)
-
-        # モルフォロジー変換
-        # kernel = np.ones((3, 3), np.uint8)
-        # mask = (seg_map == 15).astype(np.uint8)
-        # mask_closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
         # 人以外の部分を透過
         img_rgba[:, :, 3] = 0
