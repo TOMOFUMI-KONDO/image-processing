@@ -1,8 +1,4 @@
 .DS_Store
-.idea
-.env
-
+.env*
 __pycache__/
-
-# クソ重い
-model/deeplabv3_pascal_train_aug_2018_01_04.tar.gz
+app/model
