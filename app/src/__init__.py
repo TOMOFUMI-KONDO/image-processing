@@ -43,15 +43,14 @@ def process_image() -> object:
             for converted_img_base64_bytes in converted_imgs_base64_bytes
         ]
 
-        if app_env == 'production':
-            put_s3(converted_imgs_base64_bytes)
+        # if app_env == 'production':
+        #     put_s3(converted_imgs_base64_bytes)
 
         return jsonify({
             'status': 'success',
-            'result': {
-                'image': converted_imgs_base64_str
-            }
+            'result': {'image': converted_imgs_base64_str}
         })
+
     except Exception as e:
         print(e)
 
@@ -72,7 +71,4 @@ def put_s3(imgs_base64: List[bytes], extension='png'):
     for index, img in enumerate(imgs):
         key = f'{time_str}-{index}.{extension}'
 
-        bucket.put_object(
-            Body=img,
-            Key=key
-        )
+        bucket.put_object(Body=img, Key=key)
