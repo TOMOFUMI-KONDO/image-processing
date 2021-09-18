@@ -1,5 +1,5 @@
 import os
-import tarfile
+import pickle
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -29,17 +29,8 @@ class DeepLabModel:
 
         graph_def = None
 
-        self.MODEL_PATH = "model/deeplabv3_pascal_train_aug_2018_01_04.tar.gz"
-
-        # Extract frozen graph from tar archive.
-        tar_file = tarfile.open(self.MODEL_PATH)
-        for tar_info in tar_file.getmembers():
-            if self.FROZEN_GRAPH_NAME in os.path.basename(tar_info.name):
-                file_handle = tar_file.extractfile(tar_info)
-                graph_def = tf.GraphDef.FromString(file_handle.read())
-                break
-
-        tar_file.close()
+        with open("model/graph_def.pickle", "rb") as f:
+            graph_def = pickle.load(f)
 
         if graph_def is None:
             raise RuntimeError("Cannot find inference graph in tar archive")
@@ -117,13 +108,13 @@ def main():
 
     img_seg_li = MODEL.run(images)
 
-    for i, (img, seg_map) in enumerate(img_seg_li):
-        img_rgba = cv2.cvtColor(img, cv2.COLOR_RGB2BGRA)
+    for i, img in enumerate(img_seg_li):
+        # img_rgba = cv2.cvtColor(img, cv2.COLOR_RGB2BGRA)
 
-        # 人以外の部分を透過
-        img_rgba[:, :, 3] = 0
-        img_rgba[:, :, 3][seg_map == 15] = 255
-        cv2.imwrite(f"res_img/256-{i}.png", img_rgba)
+        # # 人以外の部分を透過
+        # img_rgba[:, :, 3] = 0
+        # img_rgba[:, :, 3][seg_map == 15] = 255
+        cv2.imwrite(f"res_img/256-{i}.png", img)
 
 
 if __name__ == "__main__":
