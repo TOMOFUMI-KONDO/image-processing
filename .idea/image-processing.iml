@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/app/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/app/model" />
     </content>
-    <orderEntry type="jdk" jdkName="Remote Python 3.6.8 Docker Compose (app at [/Users/tomo/Dev/image-processing/docker-compose.yml])" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.6.8 Docker (181562662531.dkr.ecr.ap-northeast-1.amazonaws.com/zoom-deco-app:latest)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

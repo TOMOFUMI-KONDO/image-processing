@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.6.8 Docker Compose (app at [/Users/tomo/Dev/image-processing/docker-compose.yml])" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.6.8 Docker (181562662531.dkr.ecr.ap-northeast-1.amazonaws.com/zoom-deco-app:latest)" project-jdk-type="Python SDK" />
 </project>

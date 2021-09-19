@@ -8,7 +8,7 @@ import boto3
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-from image_process import main
+from src.image_process import main
 
 app = Flask('image-processing')
 CORS(app)
@@ -43,8 +43,8 @@ def process_image() -> object:
             for converted_img_base64_bytes in converted_imgs_base64_bytes
         ]
 
-        if app_env == 'production':
-            put_s3(converted_imgs_base64_bytes)
+        # if app_env == 'production':
+        #     put_s3(converted_imgs_base64_bytes)
 
         return jsonify({
             'status': 'success',
